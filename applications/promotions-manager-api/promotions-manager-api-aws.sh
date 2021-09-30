@@ -4,11 +4,19 @@ echo '=============== Staring init script for Promotions Manager API ===========
 # save all env for debugging
 printenv > /var/log/colony-vars-"$(basename "$BASH_SOURCE" .sh)".txt
 
-echo '==> Installing Node.js and NPM'
+echo '==> apt-get update'
 apt-get update -y
+
+echo '==> Instal curl'
 apt-get install curl -y
-curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -
-apt-get install nodejs -y
+
+echo '==> Installing node 16.10 using NVM'
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+nvm install 16.10
+
+echo '==> Installing npm'
 apt-get install npm -y
 
 echo '==> Extract api artifact to /var/promotions-manager-api'
