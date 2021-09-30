@@ -14,21 +14,21 @@ echo '==> Installing node 16'
 sudo add-apt-repository -y -r ppa:chris-lea/node.js
 sudo rm -f /etc/apt/sources.list.d/chris-lea-node_js-*.list
 sudo rm -f /etc/apt/sources.list.d/chris-lea-node_js-*.list.save
-
 KEYRING=/usr/share/keyrings/nodesource.gpg
 wget --quiet -O - https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | sudo tee "$KEYRING" >/dev/null
 gpg --no-default-keyring --keyring "$KEYRING" --list-keys
-
 VERSION=node_16.x
 DISTRO="$(lsb_release -s -c)"
 echo "deb [signed-by=$KEYRING] http://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee /etc/apt/sources.list.d/nodesource.list
 echo "deb-src [signed-by=$KEYRING] http://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
-
 sudo apt-get update -y
-sudo apt-get install nodejs -y
+sudo apt-get install nodejs -y --allow-unauthenticated
 
 echo '==> Installing npm'
-apt-get install npm -y
+sudo apt install libssl1.0-dev -y
+sudo apt install nodejs-dev -y
+sudo apt install node-gyp -y
+sudo apt install npm -y
 
 echo '==> Extract api artifact to /var/promotions-manager-api'
 mkdir $ARTIFACTS_PATH/drop
@@ -45,7 +45,7 @@ echo 'API_PORT='$API_PORT >> /etc/environment
 source /etc/environment
 
 echo '==> Install PM2, it provides an easy way to manage and daemonize nodejs applications'
-npm install -g pm2
+npm install -g pm2 -y
 
 echo '==> Start our api and configure as a daemon using pm2'
 cd /var/promotions-manager-api
