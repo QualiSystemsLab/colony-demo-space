@@ -10,11 +10,22 @@ apt-get update -y
 echo '==> Instal curl'
 apt-get install curl -y
 
-echo '==> Installing node 16.10 using NVM'
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-nvm install 16.10
+echo '==> Installing node 16'
+sudo add-apt-repository -y -r ppa:chris-lea/node.js
+sudo rm -f /etc/apt/sources.list.d/chris-lea-node_js-*.list
+sudo rm -f /etc/apt/sources.list.d/chris-lea-node_js-*.list.save
+
+KEYRING=/usr/share/keyrings/nodesource.gpg
+wget --quiet -O - https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | sudo tee "$KEYRING" >/dev/null
+gpg --no-default-keyring --keyring "$KEYRING" --list-keys
+
+VERSION=node_16.x
+DISTRO="$(lsb_release -s -c)"
+echo "deb [signed-by=$KEYRING] http://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+echo "deb-src [signed-by=$KEYRING] http://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+
+sudo apt-get update -y
+sudo apt-get install nodejs -y
 
 echo '==> Installing npm'
 apt-get install npm -y
