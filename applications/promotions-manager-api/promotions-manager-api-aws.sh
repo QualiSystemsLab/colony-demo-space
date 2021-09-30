@@ -5,10 +5,11 @@ echo '=============== Staring init script for Promotions Manager API ===========
 printenv > /var/log/colony-vars-"$(basename "$BASH_SOURCE" .sh)".txt
 
 echo '==> Installing Node.js and NPM'
-sudo apt-get update -y
-sudo apt install curl -y
+apt-get update -y
+apt-get install curl -y
 curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -
-apt install nodejs -y
+apt-get install nodejs -y
+apt-get install npm -y
 
 echo '==> Extract api artifact to /var/promotions-manager-api'
 mkdir $ARTIFACTS_PATH/drop
